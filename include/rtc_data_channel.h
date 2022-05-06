@@ -28,13 +28,15 @@ class RTCDataChannelObserver {
 
   virtual void OnMessage(const char* buffer, int length, bool binary) = 0;
 
+  virtual void OnBufferedAmountChange(uint64_t sent_data_size) = 0;
+
  protected:
   virtual ~RTCDataChannelObserver() = default;
 };
 
 class RTCDataChannel : public RefCountInterface {
  public:
-  virtual void Send(const string data, bool binary = false) = 0;
+  virtual void Send(const uint8_t* data, uint32_t size, bool binary = false) = 0;
 
   virtual void Close() = 0;
 
@@ -47,6 +49,8 @@ class RTCDataChannel : public RefCountInterface {
   virtual int id() const = 0;
 
   virtual RTCDataChannelState state() = 0;
+
+  virtual uint64_t buffered_amount() const = 0;
 
  protected:
   virtual ~RTCDataChannel() {}

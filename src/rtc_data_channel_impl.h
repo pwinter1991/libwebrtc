@@ -3,7 +3,6 @@
 
 #include "rtc_data_channel.h"
 #include "rtc_types.h"
-
 #include "api/data_channel_interface.h"
 #include "rtc_base/synchronization/mutex.h"
 
@@ -15,7 +14,7 @@ class RTCDataChannelImpl : public RTCDataChannel,
   RTCDataChannelImpl(
       rtc::scoped_refptr<webrtc::DataChannelInterface> rtc_data_channel);
 
-  virtual void Send(const string data, bool binary = false) override;
+  virtual void Send(const uint8_t* data, uint32_t size, bool binary = false) override;
 
   virtual void Close() override;
 
@@ -27,6 +26,8 @@ class RTCDataChannelImpl : public RTCDataChannel,
 
   virtual int id() const override;
 
+  uint64_t buffered_amount() const override;
+
   virtual RTCDataChannelState state() override;
 
   rtc::scoped_refptr<webrtc::DataChannelInterface> rtc_data_channel() {
@@ -37,6 +38,8 @@ class RTCDataChannelImpl : public RTCDataChannel,
   virtual void OnStateChange() override;
 
   virtual void OnMessage(const webrtc::DataBuffer& buffer) override;
+
+  virtual void OnBufferedAmountChange(uint64_t sent_data_size) override;
 
  private:
   rtc::scoped_refptr<webrtc::DataChannelInterface> rtc_data_channel_;
